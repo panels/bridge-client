@@ -1,7 +1,7 @@
 {
   "name": "panel-bridge-client",
   "version": "0.0.1",
-  "description": "",
+  "description": "Client library for connecting to panel bridge",
   "main": "lib/bridge.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee --compile --output lib/ src/ && ./node_modules/.bin/browserify lib/main.js > lib/bridge.js && rm lib/main.js"

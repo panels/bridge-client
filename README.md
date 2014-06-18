@@ -1,5 +1,7 @@
 # bridge-client
 
+Client library for connecting to panel bridge
+
 ```javascript
 var bridge = new Bridge();
 
