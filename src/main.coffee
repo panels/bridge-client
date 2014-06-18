@@ -12,9 +12,12 @@ class Bridge extends EventEmitter
       callback?()
 
     @ws.onmessage = (e) =>
-      data = JSON.parse(e.data)
-      if data.type == 'callback'
-        @_emit(data.func, data.params)
+      try
+        data = JSON.parse(e.data)
+        if data.type == 'callback'
+          @_emit(data.func, data.params)
+      catch
+        console.error "Event data can't be parsed", e
 
   emit: (func, params) ->
     @_send('callFunc', id: @id, func: func, params: params)
