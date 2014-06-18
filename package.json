@@ -1,0 +1,25 @@
+{
+  "name": "panel-bridge-client",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/bridge.js",
+  "scripts": {
+    "prepublish": "./node_modules/.bin/coffee --compile --output lib/ src/ && ./node_modules/.bin/browserify lib/main.js > lib/bridge.js && rm lib/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panels/bridge-client"
+  },
+  "bugs": {
+    "url": "https://github.com/panels/bridge-client/issues"
+  },
+  "author": "Tomas Hanacek <tomashanacek@abdoc.net> (https://github.com/tomashanacek)",
+  "contributors": [
+    "Marek Hrabe <marekhrabe@abdoc.net> (https://github.com/marekhrabe)"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^4.1.10",
+    "coffee-script": "^1.7.1"
+  }
+}
