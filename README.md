@@ -13,3 +13,7 @@ bridge.on('someEvent', function (data) {
   console.log(data);
 });
 ```
+
+## development
+
+Edit `src/main.coffee`, use `npm run prepublish` to build compiled and minified `lib/bridge.js`.
