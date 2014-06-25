@@ -1,31 +1,55 @@
 {EventEmitter} = require 'events'
+querystring = require 'querystring'
 
 EventEmitter.prototype._emit = EventEmitter.prototype.emit
 
 class Bridge extends EventEmitter
   constructor: (callback) ->
-    @id = window.location.pathname.replace(/\//g, '')
-    @ws = new WebSocket("ws://#{window.location.host}")
+    qs = querystring.parse(window.location.search.replace(/^\?/, ''))
+    @_id = if qs.id? then qs.id else 'default'
 
-    @ws.onopen = (event) =>
-      @_send('pair', {id: @id})
+    @platform = qs.platform || 'unknown'
+    document.documentElement.classList.add("platform-#{@platform}")
+
+    @_ws = new WebSocket("ws://#{window.location.host}")
+    @connected = false
+
+    @eventQueue = []
+
+    @_ws.onopen = (event) =>
+      @connected = true
+      @_send('pair', { id: @id })
+      @resolveEventQueue()
       callback?()
 
-    @ws.onmessage = (e) =>
+    @_ws.onmessage = (e) =>
       try
         data = JSON.parse(e.data)
-        if data.type == 'callback'
-          @_emit(data.func, data.params)
       catch
         console.error "Event data can't be parsed", e
 
-  emit: (func, params) ->
-    @_send('callFunc', id: @id, func: func, params: params)
+      if data.type in ['panel-event', 'global-event']
+        @_emit(data.name, data.params)
 
-  _send: (type, data) ->
-    msg =
+  emit: (name, params, type = 'server-event') ->
+    @_send type,
+      id: @id
+      name: name
+      params: params
+
+  _resolveEventQueue: ->
+    @_ws.send e for e in @eventQueue
+    @eventQueue = []
+
+  _send: (type, params) ->
+    msg = JSON.stringify
       type: type
-      data: data
-    @ws.send(JSON.stringify(msg))
+      params: params or null
+
+    if @connected
+      @_ws.send msg
+    else
+      @eventQueue.push msg
+
 
 window.Bridge = Bridge
