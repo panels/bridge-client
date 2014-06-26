@@ -14,12 +14,12 @@ class Bridge extends EventEmitter
     @_ws = new WebSocket("ws://#{window.location.host}")
     @connected = false
 
-    @eventQueue = []
+    @_eventQueue = []
 
     @_ws.onopen = (event) =>
       @connected = true
       @_send('pair', { id: @id })
-      @resolveEventQueue()
+      @_resolveEventQueue()
       callback?()
 
     @_ws.onmessage = (e) =>
@@ -38,8 +38,8 @@ class Bridge extends EventEmitter
       params: params
 
   _resolveEventQueue: ->
-    @_ws.send e for e in @eventQueue
-    @eventQueue = []
+    @_ws.send e for e in @_eventQueue
+    @_eventQueue = []
 
   _send: (type, params) ->
     msg = JSON.stringify
@@ -49,7 +49,7 @@ class Bridge extends EventEmitter
     if @connected
       @_ws.send msg
     else
-      @eventQueue.push msg
+      @_eventQueue.push msg
 
 
 window.Bridge = Bridge
