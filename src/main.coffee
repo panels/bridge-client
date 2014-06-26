@@ -18,7 +18,7 @@ class Bridge extends EventEmitter
 
     @_ws.onopen = (event) =>
       @connected = true
-      @_send('pair', { id: @id })
+      @emit('pair', { id: @id }, 'pair')
       @_resolveEventQueue()
       callback?()
 
@@ -32,24 +32,19 @@ class Bridge extends EventEmitter
         @_emit(data.name, data.params)
 
   emit: (name, params, type = 'server-event') ->
-    @_send type,
+    msg = JSON.stringify
       id: @id
       name: name
-      params: params
-
-  _resolveEventQueue: ->
-    @_ws.send e for e in @_eventQueue
-    @_eventQueue = []
-
-  _send: (type, params) ->
-    msg = JSON.stringify
       type: type
-      params: params or null
+      params: params
 
     if @connected
       @_ws.send msg
     else
       @_eventQueue.push msg
 
+  _resolveEventQueue: ->
+    @_ws.send e for e in @_eventQueue
+    @_eventQueue = []
 
 window.Bridge = Bridge
