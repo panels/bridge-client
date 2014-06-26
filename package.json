@@ -1,6 +1,6 @@
 {
   "name": "panel-bridge-client",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Client library for connecting to panel bridge",
   "main": "lib/bridge.js",
   "scripts": {
