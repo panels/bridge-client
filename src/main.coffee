@@ -19,6 +19,8 @@ class Bridge extends EventEmitter
     @_ws.onopen = (event) =>
       @connected = true
       @emit('pair', { id: @id }, 'pair')
+      if qs.debug?
+        @emit('debug', true, 'debug')
       @_resolveEventQueue()
       callback?()
 
@@ -30,6 +32,8 @@ class Bridge extends EventEmitter
 
       if data.type in ['panel-event', 'global-event']
         @_emit(data.name, data.params)
+      if data.type is 'debug' and qs.debug?
+        @_handleDebugEvent(data.params)
 
   emit: (name, params, type = 'server-event') ->
     msg = JSON.stringify
@@ -42,6 +46,14 @@ class Bridge extends EventEmitter
       @_ws.send msg
     else
       @_eventQueue.push msg
+
+  _handleDebugEvent: (e) ->
+    console.log 'debug', e
+    if e.extension in ['less', 'css']
+      return Array.prototype.forEach.call document.querySelectorAll("link[href*=\"#{e.filepath}\"]"), (s) ->
+        s.href = s.href.replace(/\?.*/, '') + '?debug' + Math.random().toString().substr(2)
+    if e.extension in ['js', 'coffee']
+      return document.location.reload()
 
   _resolveEventQueue: ->
     @_ws.send e for e in @_eventQueue
