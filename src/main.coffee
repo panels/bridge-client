@@ -48,7 +48,6 @@ class Bridge extends EventEmitter
       @_eventQueue.push msg
 
   _handleDebugEvent: (e) ->
-    console.log 'debug', e
     if e.extension in ['less', 'css']
       return Array.prototype.forEach.call document.querySelectorAll("link[href*=\"#{e.filepath}\"]"), (s) ->
         s.href = s.href.replace(/\?.*/, '') + '?debug' + Math.random().toString().substr(2)
