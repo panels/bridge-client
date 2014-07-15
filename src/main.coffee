@@ -74,6 +74,8 @@ class Bridge extends EventEmitter
   _startDebugMode: ->
     @debugMode = true
     @_log 'Debug mode active'
+    if @connected
+      @emit 'debug', true, 'debug'
 
   _handleDebugEvent: (e) ->
     @_log 'File changed event', e
