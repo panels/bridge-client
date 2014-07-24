@@ -82,7 +82,7 @@ class Bridge extends EventEmitter
 
     if e.extension in ['less', 'css']
       @_log 'Reloading styles'
-      return Array.prototype.forEach.call document.querySelectorAll("link[href*=\"#{e.filepath}\"]"), (s) ->
+      return Array.prototype.forEach.call document.querySelectorAll("link[href*=\"less\"],link[href*=\"css\"]"), (s) ->
         s.href = s.href.replace(/\?.*/, '') + '?debug' + Math.random().toString().substr(2)
     if e.extension in ['js', 'coffee', 'html']
       @_log 'Reloading document'
