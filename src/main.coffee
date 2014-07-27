@@ -34,6 +34,14 @@ class Bridge extends EventEmitter
       @_resolveEventQueue()
       callback?()
 
+    @_ws.onclose = (err) =>
+      @_log 'Closed connection to backend'
+      @connected = false
+
+      if @debugMode
+        @_log 'Attempting to reconnect'
+        @_reloadWhenReady()
+
     @_log 'Initialized', { backend: server, platform: @platform }
 
     @_ws.onmessage = (e) =>
@@ -91,5 +99,18 @@ class Bridge extends EventEmitter
   _resolveEventQueue: ->
     @_ws.send e for e in @_eventQueue
     @_eventQueue = []
+
+  _reloadWhenReady: ->
+    xhr = new XMLHttpRequest
+    xhr.onload = ->
+      @_log 'Successfully reconnected. Reloading'
+      document.location.reload()
+    xhr.onerror = =>
+      setTimeout(=>
+        @_log 'Trying again to reconnect'
+        @_reloadWhenReady()
+      , 1500)
+    xhr.open('GET', "#{document.location.origin}/_panels/ping", true)
+    xhr.send()
 
 window.Bridge = Bridge
