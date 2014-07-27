@@ -102,7 +102,7 @@ class Bridge extends EventEmitter
 
   _reloadWhenReady: ->
     xhr = new XMLHttpRequest
-    xhr.onload = ->
+    xhr.onload = =>
       @_log 'Successfully reconnected. Reloading'
       document.location.reload()
     xhr.onerror = =>
