@@ -5,16 +5,16 @@ EventEmitter.prototype._emit = EventEmitter.prototype.emit
 
 class Bridge extends EventEmitter
   constructor: (callback) ->
-    qs = querystring.parse(window.location.search.replace(/^\?/, ''))
-    @_id = if qs.id? then qs.id else 'default'
+    @qs = querystring.parse(window.location.search.replace(/^\?/, ''))
+    @_id = if @qs.id? then @qs.id else 'default'
 
     server = "ws://#{window.location.host}"
 
     @debugMode = false
-    if qs.debug?
+    if @qs.debug?
       @_startDebugMode()
 
-    @platform = qs.platform || 'unknown'
+    @platform = @qs.platform || 'unknown'
     document.documentElement.classList.add "platform-#{@platform}"
 
     @_ws = new WebSocket server
