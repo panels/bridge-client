@@ -17,7 +17,6 @@ class Bridge extends EventEmitter
     @platform = @qs.platform || 'unknown'
     document.documentElement.classList.add "platform-#{@platform}"
 
-    console.log process
     document.documentElement.classList.add if navigator.platform.toLowerCase().indexOf('mac') isnt -1 then 'os-darwin' else 'os-windows'
 
     @_ws = new WebSocket server
