@@ -8,7 +8,12 @@ class Bridge extends EventEmitter
     @qs = querystring.parse(window.location.search.replace(/^\?/, ''))
     @_id = if @qs.id? then @qs.id else 'default'
 
-    server = "ws://#{window.location.host}"
+    if document.location.protocol is 'https:'
+      protocol = 'wss'
+    else
+      protocol = 'ws'
+
+    server = "#{protocol}://#{window.location.host}"
 
     @debugMode = false
     if @qs.debug?
