@@ -4,7 +4,7 @@
   "description": "Client library for connecting to panel bridge",
   "main": "lib/bridge.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/browserify -t coffeeify --extension=\".coffee\" src/main.coffee | ./node_modules/.bin/uglifyjs > lib/bridge.js"
+    "prepublish": "mkdir -p lib && ./node_modules/.bin/browserify -t coffeeify --extension=\".coffee\" src/main.coffee | ./node_modules/.bin/uglifyjs > lib/bridge.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,10 @@
     "browserify": "^4.1.10",
     "coffeeify": "^0.6.0",
     "uglify-js": "^2.4.14"
+  },
+  "dependencies": {
+    "browserify": "^11.0.1",
+    "coffeeify": "^1.1.0",
+    "uglify-js": "^2.4.24"
   }
 }
